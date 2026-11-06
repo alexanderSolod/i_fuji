@@ -99,3 +99,20 @@ Each item: run on an iPhone 17 Pro, read the in-app log (Debug -> Share log), re
 - No golden-DNG automated test (needs an owner DNG, kept out of the repo).
 - No live-switching between an Apple Log preview format and a RAW capture format if they cannot
   coexist (spec 3.1 "optionally"); decide after item 1.
+
+### Built-in LUTs (owner decision, 2026-11-05)
+The owner did not want a manual import step. `.cube` files placed in `iOS/FilmLab/Resources/LUTs/` are
+copied into the app bundle and installed on first launch (`installBundledLUTsIfNeeded`), with Classic
+Chrome selected. They stay gitignored (spec rule 7), so a fresh clone has none and shows the import
+screen as before. `FLog2-709` and `WDR-709` are left out because they are not film simulations.
+
+### First device run: launch crash (iPhone 17 Pro, iOS 27, 2026-11-05)
+The session aborted in `commitConfiguration` with "ProRes Raw format only supports rotation angle of 0."
+ProRes RAW formats list Apple Log in `supportedColorSpaces`, and the photo-size sort picked one.
+`appleLogFormats` now keeps only formats whose native subtype `PreviewRenderer` can decode.
+Item 1 under "Open questions" (Apple Log + Bayer RAW together) still needs reading from the status chip.
+
+### Photos save: PHPhotosErrorDomain 3300 (iPhone 17 Pro, iOS 27, 2026-11-05)
+`addResource(with:data:options:)` for the HEIC + DNG pair failed with `changeNotSupported` (3300). An
+on-device test of the same request using `addResource(with:fileURL:options:)` succeeded, so
+`savePair` now writes temporary copies and passes file URLs.

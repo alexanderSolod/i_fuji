@@ -76,6 +76,35 @@ final class SimulationLibrary: ObservableObject {
         return failures
     }
 
+    /// On first launch, copies LUTs built into the app so they behave like imported ones (rename, delete,
+    /// and a deleted one stays deleted). Returns what was installed. Files parse lazily in `lutTexture`.
+    /// The `.cube` files are gitignored, so a fresh clone has none and falls back to the import screen.
+    @discardableResult
+    func installBundledLUTsIfNeeded() -> [Simulation] {
+        let key = "bundledLUTsInstalled"
+        guard !UserDefaults.standard.bool(forKey: key),
+              let urls = Bundle.main.urls(forResourcesWithExtension: "cube", subdirectory: "LUTs"), !urls.isEmpty
+        else { return [] }
+        var installed: [Simulation] = []
+        for url in urls {
+            let id = UUID().uuidString
+            let fileName = "\(id)_\(url.lastPathComponent)"
+            do {
+                try FileManager.default.copyItem(at: url, to: directory.appendingPathComponent(fileName))
+                installed.append(Simulation(id: id, displayName: Self.displayName(forFileName: url.lastPathComponent),
+                                            lutFileName: fileName, dateImported: Date()))
+            } catch {
+                Log.error("Bundled LUT install failed for \(url.lastPathComponent): \(error.localizedDescription)")
+            }
+        }
+        installed.sort { $0.displayName < $1.displayName }
+        simulations.append(contentsOf: installed)
+        try? save()
+        UserDefaults.standard.set(true, forKey: key)
+        Log.info("Installed \(installed.count) bundled LUTs")
+        return installed
+    }
+
     func rename(_ id: String, to name: String) {
         guard let i = simulations.firstIndex(where: { $0.id == id }), !simulations[i].isBuiltIn else { return }
         simulations[i].displayName = name
@@ -110,7 +139,7 @@ final class SimulationLibrary: ObservableObject {
     // MARK: Names
 
     nonisolated private static let knownNames: [(keys: [String], name: String)] = [
-        (["eternableachbypass", "bleachbypass"], "Eterna Bleach Bypass"),
+        (["eternableachbypass", "bleachbypass", "eternabb"], "Eterna Bleach Bypass"),
         (["classicchrome"], "Classic Chrome"),
         (["classicneg"], "Classic Neg."),
         (["pronegstd", "pronegstandard"], "PRO Neg. Std"),

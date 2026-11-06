@@ -189,6 +189,7 @@ final class ColorScienceTests: XCTestCase {
     func testDisplayNames() {
         XCTAssertEqual(SimulationLibrary.displayName(forFileName: "XH2S_FLog2_FGamut_to_Classic-Chrome_BT.709_33grid_V.1.00.cube"), "Classic Chrome")
         XCTAssertEqual(SimulationLibrary.displayName(forFileName: "FLog2_ETERNA-BleachBypass_33grid.cube"), "Eterna Bleach Bypass")
+        XCTAssertEqual(SimulationLibrary.displayName(forFileName: "FLog2_to_ETERNA-BB_33grid_V.1.00.cube"), "Eterna Bleach Bypass")
         XCTAssertEqual(SimulationLibrary.displayName(forFileName: "F-Log2_Eterna.cube"), "Eterna")
         XCTAssertEqual(SimulationLibrary.displayName(forFileName: "FLog2_PRO-Neg.Std_WDR.cube"), "PRO Neg. Std")
         XCTAssertEqual(SimulationLibrary.displayName(forFileName: "FLog2_Classic-Neg.cube"), "Classic Neg.")

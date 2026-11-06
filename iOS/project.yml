@@ -9,7 +9,7 @@ settings:
     SWIFT_VERSION: "5.0"
     MARKETING_VERSION: "0.1.0"
     CURRENT_PROJECT_VERSION: "1"
-    DEVELOPMENT_TEAM: ""
+    DEVELOPMENT_TEAM: "GKXLFYC55R"
     CODE_SIGN_STYLE: Automatic
     ENABLE_USER_SCRIPT_SANDBOXING: YES
 targets:
@@ -18,9 +18,15 @@ targets:
     platform: iOS
     sources:
       - path: FilmLab
+        excludes:
+          - Resources/LUTs
+      # Folder reference: the .cube files inside are gitignored, so the project never names them.
+      - path: FilmLab/Resources/LUTs
+        type: folder
+        buildPhase: resources
     settings:
       base:
-        PRODUCT_BUNDLE_IDENTIFIER: com.filmlab.app
+        PRODUCT_BUNDLE_IDENTIFIER: com.alexandersolod.filmlab
         TARGETED_DEVICE_FAMILY: "1"
         INFOPLIST_FILE: FilmLab/App/Info.plist
         GENERATE_INFOPLIST_FILE: NO
@@ -39,7 +45,7 @@ targets:
       - target: FilmLab
     settings:
       base:
-        PRODUCT_BUNDLE_IDENTIFIER: com.filmlab.app.tests
+        PRODUCT_BUNDLE_IDENTIFIER: com.alexandersolod.filmlab.tests
         GENERATE_INFOPLIST_FILE: YES
         TEST_HOST: "$(BUILT_PRODUCTS_DIR)/FilmLab.app/FilmLab"
         BUNDLE_LOADER: "$(TEST_HOST)"

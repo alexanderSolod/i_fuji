@@ -15,7 +15,7 @@ struct ImportLUTsScreen: View {
         VStack(alignment: .leading, spacing: 20) {
             Text("Import Fujifilm LUTs").font(.largeTitle.bold())
             Text("""
-            FilmLab uses Fujifilm's official F-Log2 to Rec.709 film simulation LUTs. They are not bundled.
+            FilmLab uses Fujifilm's official F-Log2 to Rec.709 film simulation LUTs. Any built into this copy of the app are already installed; to add more:
 
             1. On fujifilm-x.com, download the F-Log2 LUT package for your camera (for example the X-T5 or X-H2).
             2. Unzip it in the Files app.
