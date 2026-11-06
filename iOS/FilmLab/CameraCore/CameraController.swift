@@ -172,7 +172,10 @@ final class CameraController: NSObject, @unchecked Sendable {
 
     static func appleLogFormats(_ device: AVCaptureDevice) -> [AVCaptureDevice.Format] {
         device.formats
-            .filter { $0.supportedColorSpaces.contains(.appleLog) }
+            // Only formats the preview can decode. ProRes RAW formats also list Apple Log, but they
+            // have no YCbCr frames and abort the session when the connection is rotated.
+            .filter { $0.supportedColorSpaces.contains(.appleLog)
+                && PreviewRenderer.format(of: CMFormatDescriptionGetMediaSubType($0.formatDescription)) != nil }
             .sorted { a, b in
                 // Prefer formats with the largest photo dimensions, then 1080p-class video for preview cost.
                 let pa = a.supportedMaxPhotoDimensions.map { Int($0.width) * Int($0.height) }.max() ?? 0

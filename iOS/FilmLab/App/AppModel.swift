@@ -57,6 +57,12 @@ final class AppModel: ObservableObject {
         if let rec = lastCapture, let file = rec.renderedFile {
             lastImage = UIImage(contentsOfFile: store.folder(rec.id).appendingPathComponent(file).path)
         }
+        let installed = library.installBundledLUTsIfNeeded()
+        if selectedSimulationID == Simulation.neutralID,
+           let start = installed.first(where: { $0.displayName == "Classic Chrome" }) ?? installed.first {
+            selectedSimulationID = start.id
+            d.set(start.id, forKey: "selectedSimulationID") // didSet does not fire inside init
+        }
     }
 
     var selectedSimulation: Simulation { library.simulation(id: selectedSimulationID) }

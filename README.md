@@ -31,6 +31,7 @@ python research/reference/render_dng.py photo.dng --lut ClassicChrome.cube --out
 
 ## LUTs
 
-Not bundled. Download the F-Log2 LUT package for an X-series camera from fujifilm-x.com, unzip in
-Files, and import the `F-Log2 -> <simulation>` `.cube` files from the app's first-run screen or the
-`+` at the end of the simulation picker.
+Not committed. To build them into the app, follow [`docs/INSTALL_LUTS.md`](docs/INSTALL_LUTS.md), which an
+agent can run start to finish. It installs Fujifilm's official F-Log2 LUTs into
+`iOS/FilmLab/Resources/LUTs/` and they load on first launch. Without them, the app's first-run screen
+lets you import `.cube` files from Files, and the `+` at the end of the simulation picker adds more.
