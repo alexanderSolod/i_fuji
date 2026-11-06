@@ -1,0 +1,21 @@
+# Xcode
+DerivedData/
+build/
+*.xcuserstate
+xcuserdata/
+*.xcscmblueprint
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+
+# Never commit Fujifilm LUTs, owner photos or sample DNGs (spec 7).
+*.cube
+!research/fixtures/test_lut_17.cube
+*.dng
+*.DNG
+research/samples/
+research/out/
+*.npy
+.DS_Store
