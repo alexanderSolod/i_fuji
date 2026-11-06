@@ -130,6 +130,7 @@ The still and preview paths may disagree on brightness for the same scene. Provi
 
 ## 5. Film simulations
 
+- To build the Fujifilm LUTs into a local copy of the app, follow `docs/INSTALL_LUTS.md`. They stay gitignored.
 - No simulations ship in the repo. On first launch, show an "Import LUTs" screen that opens the Files picker for one or more `.cube` files.
 - Copy imported LUTs into the app's Application Support folder. Parse once, cache as 3D textures.
 - Display name: derive from the file name, with a simple map for known Fujifilm names (Provia, Velvia, Astia, Classic Chrome, PRO Neg. Std, Classic Neg., Eterna, Eterna Bleach Bypass, Reala Ace, Acros). The owner can rename.
