@@ -1,0 +1,627 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		00A673A0B354DC5FBCF0E3AB /* CameraController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BF40B760FE4D532D371F92E /* CameraController.swift */; };
+		0C420877DBBB6D03A529FEC3 /* Shaders.metal in Sources */ = {isa = PBXBuildFile; fileRef = B5ADA184F405A801AB5E15E0 /* Shaders.metal */; };
+		0D6033F9D20FB2D6D850CAF8 /* ViewfinderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A488F0081C113B5A43245F5D /* ViewfinderView.swift */; };
+		119E0C713EDA871D120B613E /* CubeLUT.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFCD3DAA4F3681F2AD441D4F /* CubeLUT.swift */; };
+		2665B5204BDA62389C44AA90 /* OutputColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BE8F07BC1F15CED860756EB /* OutputColor.swift */; };
+		26F73EFB1C04F589E00245B7 /* ColorScienceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83C8D4349B3DAC9F43545F92 /* ColorScienceTests.swift */; };
+		2C220BA0F4B476585FD2FF12 /* Transfer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DBF48FC1ACEC59EEF811A45 /* Transfer.swift */; };
+		3EFD5C9345389021202754B6 /* CaptureStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = C30BA3F5455CB3E7A988E5A1 /* CaptureStore.swift */; };
+		4A41B08C5096AAB51F984DED /* fixtures in Resources */ = {isa = PBXBuildFile; fileRef = 15538F4121CB8C25316C57EA /* fixtures */; };
+		4F9E694EA2E2397677B9856F /* AppModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00B475DF9748C52C3AAFB485 /* AppModel.swift */; };
+		641696EF81F367A32B008709 /* ImportLUTsScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 819CFEF00EB005C9F656A76F /* ImportLUTsScreen.swift */; };
+		64F3309F8B080B40FDB25794 /* LUTTexture.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E67C3B04F8C785BCF8C361D /* LUTTexture.swift */; };
+		656CDD420D47A0B80A186D82 /* DebugScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E8EF4F5B8A21B7CD83441BE /* DebugScreen.swift */; };
+		7B37E8CAA22E87A02E738950 /* SimulationLibrary.swift in Sources */ = {isa = PBXBuildFile; fileRef = F55A9802AD693BA18DE69373 /* SimulationLibrary.swift */; };
+		7F69CA9D33CD63C3E04E511B /* CameraModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3ABADDA8090133D522903666 /* CameraModels.swift */; };
+		8E489FCCF20A530A3B0107BE /* MetalContext.swift in Sources */ = {isa = PBXBuildFile; fileRef = F956BF2622D3A3FEABDFAFD2 /* MetalContext.swift */; };
+		9597E7B9F4FEE8F81274637E /* ReviewScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = A49E46B2B226E201C8E22019 /* ReviewScreen.swift */; };
+		98D1C9CF95C922E4A4846EAE /* PhotoLibrarySaver.swift in Sources */ = {isa = PBXBuildFile; fileRef = E597FA5C88A04997F762732F /* PhotoLibrarySaver.swift */; };
+		A19B44673FC77F6D4A17418A /* YCbCr.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCF4FF98834F2EE02FF51F56 /* YCbCr.swift */; };
+		A48256E0BA40379495B614E3 /* NeutralLUT.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D219099F770C6624DC9074F /* NeutralLUT.swift */; };
+		A9487A00917A2F01F90DE6BA /* ShaderTypes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09A7A96690C30D15F1221040 /* ShaderTypes.swift */; };
+		AE16355E3317C63982C00BC7 /* Log.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D801C50B4C5D9CC3195BAF6 /* Log.swift */; };
+		B6D8A3E99DB6B0A32F2A924E /* SharedStageReference.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73AAC9B853D86CB76B19DEB9 /* SharedStageReference.swift */; };
+		C1EEAC401F5D0C9D7DD242CE /* FilmLabApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EDD276BBC703F0E93D856E7 /* FilmLabApp.swift */; };
+		C2FE218F3935FAB20D182110 /* FilmStage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 746D411E78F43594EA393249 /* FilmStage.swift */; };
+		C6D6AA1BF5DD3E468E80EEB5 /* StorageTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C83DA46B8ABD0456639AEC0 /* StorageTests.swift */; };
+		CD9CF6531F3815D41A0D2B47 /* ImageExporter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B10B53D2134A778199B71BC /* ImageExporter.swift */; };
+		D09D6187B54A189ED4203F10 /* AppleLog.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7887A6913D92AAFEFAA077A6 /* AppleLog.swift */; };
+		D8BC7F504BDAF09E40C55D4B /* FLog2.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8DC474A7ACC0AAACBE40A10 /* FLog2.swift */; };
+		DE3A060D45A7C48ED5AE6C28 /* Gamut.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D107FA94FE593821CF572A1 /* Gamut.swift */; };
+		E885902A0D4EE061DBC43AD4 /* PreviewRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93192C217BF466D7278BE47B /* PreviewRenderer.swift */; };
+		EAA4A40DB278EDFFC0DF48B1 /* CameraScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7342D3CE16881B8E38FB8280 /* CameraScreen.swift */; };
+		F725ABE3E698ED9028A16077 /* FilmEngineTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0913BCCC52B0DFB5606A6609 /* FilmEngineTests.swift */; };
+		FCDFA0B771400A31B03A4450 /* RAWDeveloper.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3D10F31694177CAD50CABAA /* RAWDeveloper.swift */; };
+		FF03CB8A19A5438FBDCD14A4 /* Fixtures.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3717C71125B7087EA06F6FE /* Fixtures.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		77FD048298856E5DDB61EFC6 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 95EDB19164CF06C5943BB34E /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 64FDFFBD616859C2EACB1C35;
+			remoteInfo = FilmLab;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		00B475DF9748C52C3AAFB485 /* AppModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppModel.swift; sourceTree = "<group>"; };
+		068556A52D9CE47BC8255097 /* FilmLab.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = FilmLab.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		0913BCCC52B0DFB5606A6609 /* FilmEngineTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilmEngineTests.swift; sourceTree = "<group>"; };
+		09A7A96690C30D15F1221040 /* ShaderTypes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShaderTypes.swift; sourceTree = "<group>"; };
+		15538F4121CB8C25316C57EA /* fixtures */ = {isa = PBXFileReference; lastKnownFileType = folder; name = fixtures; path = ../research/fixtures; sourceTree = SOURCE_ROOT; };
+		3ABADDA8090133D522903666 /* CameraModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraModels.swift; sourceTree = "<group>"; };
+		3D107FA94FE593821CF572A1 /* Gamut.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Gamut.swift; sourceTree = "<group>"; };
+		3D801C50B4C5D9CC3195BAF6 /* Log.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Log.swift; sourceTree = "<group>"; };
+		3DBF48FC1ACEC59EEF811A45 /* Transfer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Transfer.swift; sourceTree = "<group>"; };
+		4B10B53D2134A778199B71BC /* ImageExporter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageExporter.swift; sourceTree = "<group>"; };
+		4EDD276BBC703F0E93D856E7 /* FilmLabApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilmLabApp.swift; sourceTree = "<group>"; };
+		5D219099F770C6624DC9074F /* NeutralLUT.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NeutralLUT.swift; sourceTree = "<group>"; };
+		6BE8F07BC1F15CED860756EB /* OutputColor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OutputColor.swift; sourceTree = "<group>"; };
+		6E8EF4F5B8A21B7CD83441BE /* DebugScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DebugScreen.swift; sourceTree = "<group>"; };
+		7342D3CE16881B8E38FB8280 /* CameraScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraScreen.swift; sourceTree = "<group>"; };
+		73AAC9B853D86CB76B19DEB9 /* SharedStageReference.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SharedStageReference.swift; sourceTree = "<group>"; };
+		746D411E78F43594EA393249 /* FilmStage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilmStage.swift; sourceTree = "<group>"; };
+		7887A6913D92AAFEFAA077A6 /* AppleLog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppleLog.swift; sourceTree = "<group>"; };
+		7BF40B760FE4D532D371F92E /* CameraController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraController.swift; sourceTree = "<group>"; };
+		7C83DA46B8ABD0456639AEC0 /* StorageTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StorageTests.swift; sourceTree = "<group>"; };
+		819CFEF00EB005C9F656A76F /* ImportLUTsScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImportLUTsScreen.swift; sourceTree = "<group>"; };
+		83C8D4349B3DAC9F43545F92 /* ColorScienceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorScienceTests.swift; sourceTree = "<group>"; };
+		8E67C3B04F8C785BCF8C361D /* LUTTexture.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LUTTexture.swift; sourceTree = "<group>"; };
+		92C7CD98792183859D5F3869 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		93192C217BF466D7278BE47B /* PreviewRenderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreviewRenderer.swift; sourceTree = "<group>"; };
+		A488F0081C113B5A43245F5D /* ViewfinderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewfinderView.swift; sourceTree = "<group>"; };
+		A49E46B2B226E201C8E22019 /* ReviewScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReviewScreen.swift; sourceTree = "<group>"; };
+		A8DC474A7ACC0AAACBE40A10 /* FLog2.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FLog2.swift; sourceTree = "<group>"; };
+		B5ADA184F405A801AB5E15E0 /* Shaders.metal */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.metal; path = Shaders.metal; sourceTree = "<group>"; };
+		BFCD3DAA4F3681F2AD441D4F /* CubeLUT.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CubeLUT.swift; sourceTree = "<group>"; };
+		C30BA3F5455CB3E7A988E5A1 /* CaptureStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CaptureStore.swift; sourceTree = "<group>"; };
+		D3717C71125B7087EA06F6FE /* Fixtures.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Fixtures.swift; sourceTree = "<group>"; };
+		DCF4FF98834F2EE02FF51F56 /* YCbCr.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YCbCr.swift; sourceTree = "<group>"; };
+		E3D10F31694177CAD50CABAA /* RAWDeveloper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RAWDeveloper.swift; sourceTree = "<group>"; };
+		E597FA5C88A04997F762732F /* PhotoLibrarySaver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoLibrarySaver.swift; sourceTree = "<group>"; };
+		F55A9802AD693BA18DE69373 /* SimulationLibrary.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SimulationLibrary.swift; sourceTree = "<group>"; };
+		F722F515C6A959A32B292402 /* FilmLabTests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = FilmLabTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		F956BF2622D3A3FEABDFAFD2 /* MetalContext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MetalContext.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXGroup section */
+		093566402DADBC15D52CF988 /* FilmLab */ = {
+			isa = PBXGroup;
+			children = (
+				3E54D3F2E160CA59AAE04617 /* App */,
+				A1F1D9BD964E9D29B1EDD3B4 /* CameraCore */,
+				2C4B9994E5F7E6293CC16C7B /* ColorScience */,
+				4998D1EE7A916B102164BDA7 /* FilmEngine */,
+				C3A2752F8722385367D4A484 /* PhotoLibrary */,
+				EE63DD58F1CB05BD54005010 /* RAWDevelopment */,
+				86FE114B4EB67FC46571F2F6 /* UI */,
+			);
+			path = FilmLab;
+			sourceTree = "<group>";
+		};
+		0E6540B205D1D1A34A0F2C03 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				068556A52D9CE47BC8255097 /* FilmLab.app */,
+				F722F515C6A959A32B292402 /* FilmLabTests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		2C4B9994E5F7E6293CC16C7B /* ColorScience */ = {
+			isa = PBXGroup;
+			children = (
+				7887A6913D92AAFEFAA077A6 /* AppleLog.swift */,
+				BFCD3DAA4F3681F2AD441D4F /* CubeLUT.swift */,
+				A8DC474A7ACC0AAACBE40A10 /* FLog2.swift */,
+				3D107FA94FE593821CF572A1 /* Gamut.swift */,
+				5D219099F770C6624DC9074F /* NeutralLUT.swift */,
+				73AAC9B853D86CB76B19DEB9 /* SharedStageReference.swift */,
+				3DBF48FC1ACEC59EEF811A45 /* Transfer.swift */,
+				DCF4FF98834F2EE02FF51F56 /* YCbCr.swift */,
+			);
+			path = ColorScience;
+			sourceTree = "<group>";
+		};
+		3E54D3F2E160CA59AAE04617 /* App */ = {
+			isa = PBXGroup;
+			children = (
+				00B475DF9748C52C3AAFB485 /* AppModel.swift */,
+				4EDD276BBC703F0E93D856E7 /* FilmLabApp.swift */,
+				92C7CD98792183859D5F3869 /* Info.plist */,
+				3D801C50B4C5D9CC3195BAF6 /* Log.swift */,
+			);
+			path = App;
+			sourceTree = "<group>";
+		};
+		406876F6DA7B3685048A4DC0 /* FilmLab */ = {
+			isa = PBXGroup;
+			children = (
+				D54DD19908D165419AC445CB /* research */,
+			);
+			name = FilmLab;
+			path = ..;
+			sourceTree = "<group>";
+		};
+		4998D1EE7A916B102164BDA7 /* FilmEngine */ = {
+			isa = PBXGroup;
+			children = (
+				746D411E78F43594EA393249 /* FilmStage.swift */,
+				8E67C3B04F8C785BCF8C361D /* LUTTexture.swift */,
+				F956BF2622D3A3FEABDFAFD2 /* MetalContext.swift */,
+				6BE8F07BC1F15CED860756EB /* OutputColor.swift */,
+				93192C217BF466D7278BE47B /* PreviewRenderer.swift */,
+				B5ADA184F405A801AB5E15E0 /* Shaders.metal */,
+				09A7A96690C30D15F1221040 /* ShaderTypes.swift */,
+				F55A9802AD693BA18DE69373 /* SimulationLibrary.swift */,
+			);
+			path = FilmEngine;
+			sourceTree = "<group>";
+		};
+		5F3B332B9461BE5D3380E727 = {
+			isa = PBXGroup;
+			children = (
+				093566402DADBC15D52CF988 /* FilmLab */,
+				406876F6DA7B3685048A4DC0 /* FilmLab */,
+				9A84B423C41925F64D3960D9 /* FilmLabTests */,
+				0E6540B205D1D1A34A0F2C03 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		86FE114B4EB67FC46571F2F6 /* UI */ = {
+			isa = PBXGroup;
+			children = (
+				7342D3CE16881B8E38FB8280 /* CameraScreen.swift */,
+				6E8EF4F5B8A21B7CD83441BE /* DebugScreen.swift */,
+				819CFEF00EB005C9F656A76F /* ImportLUTsScreen.swift */,
+				A49E46B2B226E201C8E22019 /* ReviewScreen.swift */,
+				A488F0081C113B5A43245F5D /* ViewfinderView.swift */,
+			);
+			path = UI;
+			sourceTree = "<group>";
+		};
+		9A84B423C41925F64D3960D9 /* FilmLabTests */ = {
+			isa = PBXGroup;
+			children = (
+				83C8D4349B3DAC9F43545F92 /* ColorScienceTests.swift */,
+				0913BCCC52B0DFB5606A6609 /* FilmEngineTests.swift */,
+				D3717C71125B7087EA06F6FE /* Fixtures.swift */,
+				7C83DA46B8ABD0456639AEC0 /* StorageTests.swift */,
+			);
+			path = FilmLabTests;
+			sourceTree = "<group>";
+		};
+		A1F1D9BD964E9D29B1EDD3B4 /* CameraCore */ = {
+			isa = PBXGroup;
+			children = (
+				7BF40B760FE4D532D371F92E /* CameraController.swift */,
+				3ABADDA8090133D522903666 /* CameraModels.swift */,
+			);
+			path = CameraCore;
+			sourceTree = "<group>";
+		};
+		C3A2752F8722385367D4A484 /* PhotoLibrary */ = {
+			isa = PBXGroup;
+			children = (
+				C30BA3F5455CB3E7A988E5A1 /* CaptureStore.swift */,
+				E597FA5C88A04997F762732F /* PhotoLibrarySaver.swift */,
+			);
+			path = PhotoLibrary;
+			sourceTree = "<group>";
+		};
+		D54DD19908D165419AC445CB /* research */ = {
+			isa = PBXGroup;
+			children = (
+				15538F4121CB8C25316C57EA /* fixtures */,
+			);
+			path = research;
+			sourceTree = "<group>";
+		};
+		EE63DD58F1CB05BD54005010 /* RAWDevelopment */ = {
+			isa = PBXGroup;
+			children = (
+				4B10B53D2134A778199B71BC /* ImageExporter.swift */,
+				E3D10F31694177CAD50CABAA /* RAWDeveloper.swift */,
+			);
+			path = RAWDevelopment;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		64FDFFBD616859C2EACB1C35 /* FilmLab */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 8DC6E14D7EA5F84532A9826A /* Build configuration list for PBXNativeTarget "FilmLab" */;
+			buildPhases = (
+				826EEA6579B4D228216C569C /* Sources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = FilmLab;
+			packageProductDependencies = (
+			);
+			productName = FilmLab;
+			productReference = 068556A52D9CE47BC8255097 /* FilmLab.app */;
+			productType = "com.apple.product-type.application";
+		};
+		BD378BB152F529A44873CFC6 /* FilmLabTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = A816D59349C538F9516246F6 /* Build configuration list for PBXNativeTarget "FilmLabTests" */;
+			buildPhases = (
+				23FC2A77F409A4EE92AE8442 /* Sources */,
+				BE0AEBE557B09DE90B71217E /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				DFB590AEE1183D027482E35C /* PBXTargetDependency */,
+			);
+			name = FilmLabTests;
+			packageProductDependencies = (
+			);
+			productName = FilmLabTests;
+			productReference = F722F515C6A959A32B292402 /* FilmLabTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		95EDB19164CF06C5943BB34E /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = YES;
+				LastUpgradeCheck = 1430;
+				TargetAttributes = {
+					64FDFFBD616859C2EACB1C35 = {
+						DevelopmentTeam = "";
+						ProvisioningStyle = Automatic;
+					};
+					BD378BB152F529A44873CFC6 = {
+						DevelopmentTeam = "";
+						ProvisioningStyle = Automatic;
+					};
+				};
+			};
+			buildConfigurationList = 37C3F376C07BAD7CC9F3E11F /* Build configuration list for PBXProject "FilmLab" */;
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				Base,
+				en,
+			);
+			mainGroup = 5F3B332B9461BE5D3380E727;
+			minimizedProjectReferenceProxies = 1;
+			preferredProjectObjectVersion = 77;
+			productRefGroup = 0E6540B205D1D1A34A0F2C03 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				64FDFFBD616859C2EACB1C35 /* FilmLab */,
+				BD378BB152F529A44873CFC6 /* FilmLabTests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		BE0AEBE557B09DE90B71217E /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				4A41B08C5096AAB51F984DED /* fixtures in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		23FC2A77F409A4EE92AE8442 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				26F73EFB1C04F589E00245B7 /* ColorScienceTests.swift in Sources */,
+				F725ABE3E698ED9028A16077 /* FilmEngineTests.swift in Sources */,
+				FF03CB8A19A5438FBDCD14A4 /* Fixtures.swift in Sources */,
+				C6D6AA1BF5DD3E468E80EEB5 /* StorageTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		826EEA6579B4D228216C569C /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				4F9E694EA2E2397677B9856F /* AppModel.swift in Sources */,
+				D09D6187B54A189ED4203F10 /* AppleLog.swift in Sources */,
+				00A673A0B354DC5FBCF0E3AB /* CameraController.swift in Sources */,
+				7F69CA9D33CD63C3E04E511B /* CameraModels.swift in Sources */,
+				EAA4A40DB278EDFFC0DF48B1 /* CameraScreen.swift in Sources */,
+				3EFD5C9345389021202754B6 /* CaptureStore.swift in Sources */,
+				119E0C713EDA871D120B613E /* CubeLUT.swift in Sources */,
+				656CDD420D47A0B80A186D82 /* DebugScreen.swift in Sources */,
+				D8BC7F504BDAF09E40C55D4B /* FLog2.swift in Sources */,
+				C1EEAC401F5D0C9D7DD242CE /* FilmLabApp.swift in Sources */,
+				C2FE218F3935FAB20D182110 /* FilmStage.swift in Sources */,
+				DE3A060D45A7C48ED5AE6C28 /* Gamut.swift in Sources */,
+				CD9CF6531F3815D41A0D2B47 /* ImageExporter.swift in Sources */,
+				641696EF81F367A32B008709 /* ImportLUTsScreen.swift in Sources */,
+				64F3309F8B080B40FDB25794 /* LUTTexture.swift in Sources */,
+				AE16355E3317C63982C00BC7 /* Log.swift in Sources */,
+				8E489FCCF20A530A3B0107BE /* MetalContext.swift in Sources */,
+				A48256E0BA40379495B614E3 /* NeutralLUT.swift in Sources */,
+				2665B5204BDA62389C44AA90 /* OutputColor.swift in Sources */,
+				98D1C9CF95C922E4A4846EAE /* PhotoLibrarySaver.swift in Sources */,
+				E885902A0D4EE061DBC43AD4 /* PreviewRenderer.swift in Sources */,
+				FCDFA0B771400A31B03A4450 /* RAWDeveloper.swift in Sources */,
+				9597E7B9F4FEE8F81274637E /* ReviewScreen.swift in Sources */,
+				A9487A00917A2F01F90DE6BA /* ShaderTypes.swift in Sources */,
+				0C420877DBBB6D03A529FEC3 /* Shaders.metal in Sources */,
+				B6D8A3E99DB6B0A32F2A924E /* SharedStageReference.swift in Sources */,
+				7B37E8CAA22E87A02E738950 /* SimulationLibrary.swift in Sources */,
+				2C220BA0F4B476585FD2FF12 /* Transfer.swift in Sources */,
+				0D6033F9D20FB2D6D850CAF8 /* ViewfinderView.swift in Sources */,
+				A19B44673FC77F6D4A17418A /* YCbCr.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		DFB590AEE1183D027482E35C /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 64FDFFBD616859C2EACB1C35 /* FilmLab */;
+			targetProxy = 77FD048298856E5DDB61EFC6 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		2B05359D80EE2FDFDD4DBC57 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = FilmLab/App/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MTL_FAST_MATH = NO;
+				MTL_LANGUAGE_REVISION = Metal30;
+				PRODUCT_BUNDLE_IDENTIFIER = com.filmlab.app;
+				SDKROOT = iphoneos;
+				SWIFT_STRICT_CONCURRENCY = minimal;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Debug;
+		};
+		69CC1E6C9385F843B886B8A7 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_STYLE = Automatic;
+				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = "";
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"DEBUG=1",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
+				MARKETING_VERSION = 0.1.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		977B1E3AE5870C2D93029D59 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = FilmLab/App/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MTL_FAST_MATH = NO;
+				MTL_LANGUAGE_REVISION = Metal30;
+				PRODUCT_BUNDLE_IDENTIFIER = com.filmlab.app;
+				SDKROOT = iphoneos;
+				SWIFT_STRICT_CONCURRENCY = minimal;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Release;
+		};
+		AC103D9C6CF95F09CD872101 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_STYLE = Automatic;
+				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = "";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
+				MARKETING_VERSION = 0.1.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
+		ADEA47A588D1F78B196F2C04 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.filmlab.app.tests;
+				SDKROOT = iphoneos;
+				SWIFT_STRICT_CONCURRENCY = minimal;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/FilmLab.app/FilmLab";
+			};
+			name = Debug;
+		};
+		DC38DC0737F0766ED28D263B /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.filmlab.app.tests;
+				SDKROOT = iphoneos;
+				SWIFT_STRICT_CONCURRENCY = minimal;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/FilmLab.app/FilmLab";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		37C3F376C07BAD7CC9F3E11F /* Build configuration list for PBXProject "FilmLab" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				69CC1E6C9385F843B886B8A7 /* Debug */,
+				AC103D9C6CF95F09CD872101 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		8DC6E14D7EA5F84532A9826A /* Build configuration list for PBXNativeTarget "FilmLab" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				2B05359D80EE2FDFDD4DBC57 /* Debug */,
+				977B1E3AE5870C2D93029D59 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		A816D59349C538F9516246F6 /* Build configuration list for PBXNativeTarget "FilmLabTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				ADEA47A588D1F78B196F2C04 /* Debug */,
+				DC38DC0737F0766ED28D263B /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 95EDB19164CF06C5943BB34E /* Project object */;
+}

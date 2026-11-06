@@ -1,0 +1,56 @@
+name: FilmLab
+options:
+  bundleIdPrefix: com.filmlab
+  deploymentTarget:
+    iOS: "18.0"
+  createIntermediateGroups: true
+settings:
+  base:
+    SWIFT_VERSION: "5.0"
+    MARKETING_VERSION: "0.1.0"
+    CURRENT_PROJECT_VERSION: "1"
+    DEVELOPMENT_TEAM: ""
+    CODE_SIGN_STYLE: Automatic
+    ENABLE_USER_SCRIPT_SANDBOXING: YES
+targets:
+  FilmLab:
+    type: application
+    platform: iOS
+    sources:
+      - path: FilmLab
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.filmlab.app
+        TARGETED_DEVICE_FAMILY: "1"
+        INFOPLIST_FILE: FilmLab/App/Info.plist
+        GENERATE_INFOPLIST_FILE: NO
+        SWIFT_STRICT_CONCURRENCY: minimal
+        MTL_FAST_MATH: NO
+        MTL_LANGUAGE_REVISION: Metal30
+  FilmLabTests:
+    type: bundle.unit-test
+    platform: iOS
+    sources:
+      - path: FilmLabTests
+      - path: ../research/fixtures
+        type: folder
+        buildPhase: resources
+    dependencies:
+      - target: FilmLab
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.filmlab.app.tests
+        GENERATE_INFOPLIST_FILE: YES
+        TEST_HOST: "$(BUILT_PRODUCTS_DIR)/FilmLab.app/FilmLab"
+        BUNDLE_LOADER: "$(TEST_HOST)"
+        SWIFT_STRICT_CONCURRENCY: minimal
+schemes:
+  FilmLab:
+    build:
+      targets:
+        FilmLab: all
+        FilmLabTests: [test]
+    test:
+      targets:
+        - FilmLabTests
+      gatherCoverageData: false
