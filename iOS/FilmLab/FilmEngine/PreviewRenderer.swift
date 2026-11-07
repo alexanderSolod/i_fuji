@@ -28,6 +28,7 @@ final class PreviewRenderer: NSObject, MTKViewDelegate, @unchecked Sendable {
     private var pendingBuffer: CVPixelBuffer?
     private var lut: LUTTexture?
     private var exposureStops: Double = 0
+    private var zoom: Double = 1
     private var inputMode: PreviewInputMode = .appleLog
     private var meterRequested = false
 
@@ -60,8 +61,9 @@ final class PreviewRenderer: NSObject, MTKViewDelegate, @unchecked Sendable {
         lock.withLock { pendingBuffer = buffer }
     }
 
-    func update(lut: LUTTexture?, exposureStops: Double, inputMode: PreviewInputMode) {
+    func update(lut: LUTTexture?, exposureStops: Double, inputMode: PreviewInputMode, zoom: Double = 1) {
         lock.withLock {
+            self.zoom = zoom
             self.lut = lut
             self.exposureStops = exposureStops
             self.inputMode = inputMode
@@ -87,8 +89,9 @@ final class PreviewRenderer: NSObject, MTKViewDelegate, @unchecked Sendable {
         let dst = drawable.texture
         var stage = StageParams(lut: lut, exposureStops: ev)
         var dec = decode
-        var preview = PreviewParams(uvTransform: Self.aspectFill(src: CGSize(width: planes.luma.width, height: planes.luma.height),
-                                                                 dst: CGSize(width: dst.width, height: dst.height)))
+        let fill = Self.aspectFill(src: CGSize(width: planes.luma.width, height: planes.luma.height),
+                                   dst: CGSize(width: dst.width, height: dst.height))
+        var preview = PreviewParams(uvTransform: Self.centerZoom(fill, by: Float(lock.withLock { zoom })))
         enc.setComputePipelineState(context.previewPipeline)
         enc.setTexture(planes.luma, index: 0)
         enc.setTexture(planes.chroma, index: 1)
@@ -227,6 +230,12 @@ final class PreviewRenderer: NSObject, MTKViewDelegate, @unchecked Sendable {
             let s = Float(srcAspect / dstAspect)
             return SIMD4(1, s, 0, (1 - s) / 2)
         }
+    }
+
+    /// Narrows a source UV transform to its center, for digital zoom.
+    static func centerZoom(_ t: SIMD4<Float>, by zoom: Float) -> SIMD4<Float> {
+        let inset = (1 - 1 / zoom) / 2
+        return SIMD4(t.x / zoom, t.y / zoom, t.z + t.x * inset, t.w + t.y * inset)
     }
 
     static func meanRGB(_ tex: MTLTexture) -> SIMD3<Float> {

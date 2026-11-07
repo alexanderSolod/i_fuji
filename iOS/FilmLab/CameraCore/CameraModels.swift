@@ -53,6 +53,7 @@ struct CaptureResult: Sendable {
     let rawPixelFormat: String
     let locked: LockedCaptureSettings
     let resolvedRAWDimensions: CMVideoDimensions
+    var flashFired = false
 }
 
 enum CameraError: Error, LocalizedError {

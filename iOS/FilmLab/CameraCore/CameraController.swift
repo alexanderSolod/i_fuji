@@ -106,7 +106,9 @@ final class CameraController: NSObject, @unchecked Sendable {
         var mode = PreviewInputMode.approximateRec709
         var bayer: OSType?
 
-        for format in Self.appleLogFormats(device) {
+        // Testing a format reconfigures the live session, so a negative result is remembered per lens and iOS version.
+        let noBayerKey = "appleLogNoBayer.\(device.uniqueID).\(ProcessInfo.processInfo.operatingSystemVersionString)"
+        for format in UserDefaults.standard.bool(forKey: noBayerKey) ? [] : Self.appleLogFormats(device) {
             try device.lockForConfiguration()
             device.activeFormat = format
             device.activeColorSpace = .appleLog
@@ -124,6 +126,7 @@ final class CameraController: NSObject, @unchecked Sendable {
         }
 
         if bayer == nil {
+            if session.isRunning, !Self.appleLogFormats(device).isEmpty { UserDefaults.standard.set(true, forKey: noBayerKey) }
             if session.canSetSessionPreset(.photo) { session.sessionPreset = .photo }
             try device.lockForConfiguration()
             if device.activeFormat.supportedColorSpaces.contains(.sRGB) { device.activeColorSpace = .sRGB }
@@ -143,6 +146,7 @@ final class CameraController: NSObject, @unchecked Sendable {
             : [native, kCVPixelFormatType_420YpCbCr8BiPlanarFullRange, kCVPixelFormatType_420YpCbCr8BiPlanarVideoRange,
                kCVPixelFormatType_420YpCbCr10BiPlanarVideoRange]
         let pixelFormat = preferred.first { available.contains($0) && PreviewRenderer.format(of: $0) != nil }
+        Log.info("Video output formats: \(available.map(fourCC)), chose \(pixelFormat.map(fourCC) ?? "none")")
         if let pixelFormat {
             videoOutput.videoSettings = [kCVPixelBufferPixelFormatTypeKey as String: pixelFormat]
         } else {
@@ -170,12 +174,18 @@ final class CameraController: NSObject, @unchecked Sendable {
         return s
     }
 
+    private static let ycbcr10Subtypes: Set<FourCharCode> = [
+        kCVPixelFormatType_420YpCbCr10BiPlanarVideoRange, kCVPixelFormatType_420YpCbCr10BiPlanarFullRange,
+        kCVPixelFormatType_422YpCbCr10BiPlanarVideoRange, kCVPixelFormatType_422YpCbCr10BiPlanarFullRange,
+    ]
+
     static func appleLogFormats(_ device: AVCaptureDevice) -> [AVCaptureDevice.Format] {
         device.formats
-            // Only formats the preview can decode. ProRes RAW formats also list Apple Log, but they
-            // have no YCbCr frames and abort the session when the connection is rotated.
+            // Y'CbCr formats only. ProRes RAW formats ('btp2') also list Apple Log, but they have no
+            // YCbCr frames and abort the session when the connection is rotated. Native Apple Log formats
+            // are 4:2:2 here; the video output converts them to the 4:2:0 the preview decodes.
             .filter { $0.supportedColorSpaces.contains(.appleLog)
-                && PreviewRenderer.format(of: CMFormatDescriptionGetMediaSubType($0.formatDescription)) != nil }
+                && ycbcr10Subtypes.contains(CMFormatDescriptionGetMediaSubType($0.formatDescription)) }
             .sorted { a, b in
                 // Prefer formats with the largest photo dimensions, then 1080p-class video for preview cost.
                 let pa = a.supportedMaxPhotoDimensions.map { Int($0.width) * Int($0.height) }.max() ?? 0
@@ -205,12 +215,15 @@ final class CameraController: NSObject, @unchecked Sendable {
 
     // MARK: Capture
 
-    func capture() async throws -> CaptureResult {
+    /// Flash modes the current lens and session support; empty when the lens has no flash.
+    var supportedFlashModes: [AVCaptureDevice.FlashMode] { photoOutput.supportedFlashModes }
+
+    func capture(flash: AVCaptureDevice.FlashMode = .off) async throws -> CaptureResult {
         let (settings, processor): (AVCapturePhotoSettings, PhotoCaptureProcessor) = try await run { [self] in
             guard let bayerFormat, let device = deviceInput?.device else { throw CameraError.rawUnavailable }
             let settings = AVCapturePhotoSettings(rawPixelFormatType: bayerFormat)
             settings.maxPhotoDimensions = photoOutput.maxPhotoDimensions
-            settings.flashMode = .off
+            settings.flashMode = photoOutput.supportedFlashModes.contains(flash) ? flash : .off
             let gains = device.deviceWhiteBalanceGains
             let tt = device.temperatureAndTintValues(for: gains)
             let locked = LockedCaptureSettings(
@@ -263,6 +276,7 @@ final class PhotoCaptureProcessor: NSObject, AVCapturePhotoCaptureDelegate, @unc
     var continuation: CheckedContinuation<CaptureResult, Error>?
     private var dng: Data?
     private var dims = CMVideoDimensions(width: 0, height: 0)
+    private var flashFired = false
 
     init(locked: LockedCaptureSettings, rawFormat: String) {
         self.locked = locked
@@ -274,15 +288,16 @@ final class PhotoCaptureProcessor: NSObject, AVCapturePhotoCaptureDelegate, @unc
         guard photo.isRawPhoto else { return }
         dng = photo.fileDataRepresentation()
         dims = photo.resolvedSettings.rawPhotoDimensions
+        flashFired = photo.resolvedSettings.isFlashEnabled
     }
 
     func photoOutput(_ output: AVCapturePhotoOutput, didFinishCaptureFor resolvedSettings: AVCaptureResolvedPhotoSettings, error: Error?) {
         defer { continuation = nil }
         if let error { continuation?.resume(throwing: CameraError.captureFailed(error.localizedDescription)); return }
         guard let dng else { continuation?.resume(throwing: CameraError.captureFailed("no RAW data")); return }
-        Log.info("Captured Bayer DNG \(dims.width)x\(dims.height) (\(rawFormat)), \(dng.count / 1024) KB, "
+        Log.info("Captured Bayer DNG \(dims.width)x\(dims.height) (\(rawFormat)), \(dng.count / 1024) KB, flash \(flashFired), "
                  + String(format: "%.4fs ISO %.0f", locked.exposureDurationSeconds, locked.iso))
         continuation?.resume(returning: CaptureResult(id: UUID(), dngData: dng, rawPixelFormat: rawFormat,
-                                                      locked: locked, resolvedRAWDimensions: dims))
+                                                      locked: locked, resolvedRAWDimensions: dims, flashFired: flashFired))
     }
 }

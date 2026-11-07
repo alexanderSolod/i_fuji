@@ -14,10 +14,14 @@ struct RenderMetadata: Codable, Sendable {
     var exposureEV: Double
     var anchorEV: Double
     var appVersion: String
+    /// Digital zoom cropped from the rendered image. The DNG is never cropped.
+    var zoom: Double? = nil
 
     var summary: String {
-        String(format: "FilmLab %@ | %@ | LUT: %@ | EV %+.2f (anchor %+.2f)", appVersion, simulationName,
-               lutFileName ?? "built-in", exposureEV, anchorEV)
+        let base = String(format: "FilmLab %@ | %@ | LUT: %@ | EV %+.2f (anchor %+.2f)", appVersion, simulationName,
+                          lutFileName ?? "built-in", exposureEV, anchorEV)
+        guard let zoom, zoom > 1 else { return base }
+        return base + String(format: " | zoom %.1fx", zoom)
     }
 
     static var currentAppVersion: String {
@@ -27,6 +31,14 @@ struct RenderMetadata: Codable, Sendable {
 
 /// Encodes the rendered Rec.709 image, keeping EXIF/TIFF/GPS from the DNG (spec 4.7).
 enum ImageExporter {
+    /// Crops to the center for digital zoom, matching `PreviewRenderer.centerZoom`.
+    static func centerCrop(_ image: CGImage, zoom: Double) -> CGImage {
+        guard zoom > 1 else { return image }
+        let w = (Double(image.width) / zoom).rounded(), h = (Double(image.height) / zoom).rounded()
+        let rect = CGRect(x: ((Double(image.width) - w) / 2).rounded(), y: ((Double(image.height) - h) / 2).rounded(), width: w, height: h)
+        return image.cropping(to: rect) ?? image
+    }
+
     static func encode(_ image: CGImage, format: ExportFormat, dng: Data?, metadata: RenderMetadata) throws -> (Data, ExportFormat) {
         let props = properties(fromDNG: dng, metadata: metadata)
         if let data = write(image, uti: format.uti, properties: props) { return (data, format) }

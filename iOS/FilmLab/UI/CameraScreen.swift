@@ -9,6 +9,8 @@ struct CameraScreen: View {
     @State private var showImport = false
     @State private var focusPoint: CGPoint?
     @State private var dragStartEV: Double?
+    @State private var pinchStartZoom: Double?
+    @AppStorage("showGrid") private var showGrid = true
 
     var body: some View {
         ZStack {
@@ -21,7 +23,7 @@ struct CameraScreen: View {
             VStack(spacing: 12) {
                 topBar
                 Spacer()
-                evBadge
+                HStack(spacing: 8) { evBadge; zoomBadge }
                 SimulationPicker(selection: $model.selectedSimulationID, onImport: { showImport = true })
                 bottomBar
             }
@@ -40,29 +42,44 @@ struct CameraScreen: View {
         } message: { Text(model.errorMessage ?? "") }
     }
 
+    /// 3:4 frame, the same shape and field of view as the saved photo, so what you frame is what you get.
     private var viewfinder: some View {
-        GeometryReader { geo in
+        VStack(spacing: 0) {
+            Color.clear.frame(height: 52)
             ViewfinderView(renderer: model.renderer)
+                .aspectRatio(3.0 / 4.0, contentMode: .fit)
                 .overlay {
-                    if let p = focusPoint {
-                        RoundedRectangle(cornerRadius: 4).stroke(.yellow, lineWidth: 1.5)
-                            .frame(width: 70, height: 70).position(p).allowsHitTesting(false)
+                    GeometryReader { geo in
+                        ZStack {
+                            Color.clear
+                            if showGrid { GridOverlay().allowsHitTesting(false) }
+                            if let p = focusPoint {
+                                RoundedRectangle(cornerRadius: 4).stroke(.yellow, lineWidth: 1.5)
+                                    .frame(width: 70, height: 70).position(p).allowsHitTesting(false)
+                            }
+                        }
+                        .contentShape(Rectangle())
+                        .gesture(SpatialTapGesture().onEnded { value in
+                            focusPoint = value.location
+                            model.focus(atViewPoint: CGPoint(x: value.location.x / geo.size.width, y: value.location.y / geo.size.height),
+                                        viewSize: geo.size)
+                            Task { try? await Task.sleep(for: .seconds(1.5)); focusPoint = nil }
+                        })
+                        .simultaneousGesture(DragGesture(minimumDistance: 20).onChanged { value in
+                            guard pinchStartZoom == nil else { return }
+                            if dragStartEV == nil { dragStartEV = model.ev }
+                            let delta = -Double(value.translation.height) / 120
+                            model.ev = min(2, max(-2, ((dragStartEV ?? 0) + delta) * 3).rounded() / 3)
+                        }.onEnded { _ in dragStartEV = nil })
+                        .simultaneousGesture(MagnifyGesture().onChanged { value in
+                            if pinchStartZoom == nil { pinchStartZoom = model.zoom }
+                            model.zoom = min(AppModel.maxZoom, max(1, (pinchStartZoom ?? 1) * value.magnification))
+                        }.onEnded { _ in pinchStartZoom = nil })
                     }
                 }
-                .contentShape(Rectangle())
-                .gesture(SpatialTapGesture().onEnded { value in
-                    focusPoint = value.location
-                    model.focus(atViewPoint: CGPoint(x: value.location.x / geo.size.width, y: value.location.y / geo.size.height),
-                                viewSize: geo.size)
-                    Task { try? await Task.sleep(for: .seconds(1.5)); focusPoint = nil }
-                })
-                .simultaneousGesture(DragGesture(minimumDistance: 20).onChanged { value in
-                    if dragStartEV == nil { dragStartEV = model.ev }
-                    let delta = -Double(value.translation.height) / 120
-                    model.ev = min(2, max(-2, ((dragStartEV ?? 0) + delta) * 3).rounded() / 3)
-                }.onEnded { _ in dragStartEV = nil })
+                .clipped()
+            Spacer(minLength: 0)
         }
-        .ignoresSafeArea()
     }
 
     private var permissionView: some View {
@@ -78,11 +95,28 @@ struct CameraScreen: View {
         HStack {
             StatusChip(status: model.cameraStatus)
             Spacer()
+            if !model.supportedFlashModes.isEmpty {
+                Button { model.cycleFlash() } label: {
+                    Image(systemName: flashIcon).padding(10).background(.ultraThinMaterial, in: Circle())
+                }
+                .accessibilityLabel("Flash")
+            }
+            Button { showGrid.toggle() } label: {
+                Image(systemName: showGrid ? "grid" : "squareshape").padding(10).background(.ultraThinMaterial, in: Circle())
+            }
             Button { showDebug = true } label: {
                 Image(systemName: "slider.horizontal.3").padding(10).background(.ultraThinMaterial, in: Circle())
             }
         }
         .padding(.horizontal)
+    }
+
+    private var flashIcon: String {
+        switch model.flashMode {
+        case .on: return "bolt.fill"
+        case .auto: return "bolt.badge.automatic.fill"
+        default: return "bolt.slash.fill"
+        }
     }
 
     private var evBadge: some View {
@@ -93,6 +127,17 @@ struct CameraScreen: View {
         }
         .font(.callout).padding(.horizontal, 14).padding(.vertical, 6)
         .background(.ultraThinMaterial, in: Capsule())
+    }
+
+    /// Tap to step through common zooms; pinch the viewfinder for anything in between.
+    private var zoomBadge: some View {
+        Button {
+            model.zoom = [2.0, AppModel.maxZoom].first { $0 > model.zoom + 0.01 } ?? 1
+        } label: {
+            Text(String(format: "%.1f×", model.zoom)).monospacedDigit()
+                .font(.callout).padding(.horizontal, 14).padding(.vertical, 6)
+                .background(.ultraThinMaterial, in: Capsule())
+        }
     }
 
     private var bottomBar: some View {
@@ -121,6 +166,22 @@ struct CameraScreen: View {
                 .frame(width: 56)
         }
         .padding(.horizontal, 24)
+    }
+}
+
+/// Rule-of-thirds framing lines.
+struct GridOverlay: View {
+    var body: some View {
+        GeometryReader { geo in
+            Path { path in
+                for i in 1...2 {
+                    let x = geo.size.width * CGFloat(i) / 3, y = geo.size.height * CGFloat(i) / 3
+                    path.move(to: CGPoint(x: x, y: 0)); path.addLine(to: CGPoint(x: x, y: geo.size.height))
+                    path.move(to: CGPoint(x: 0, y: y)); path.addLine(to: CGPoint(x: geo.size.width, y: y))
+                }
+            }
+            .stroke(.white.opacity(0.4), lineWidth: 0.5)
+        }
     }
 }
 
