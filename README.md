@@ -1,7 +1,7 @@
 # FilmLab
 
 Personal iOS camera: live Fujifilm film-simulation viewfinder, untouched Bayer RAW DNG capture, and a
-film-simulation HEIF/JPEG rendered from that DNG, saved to Photos as one RAW+processed pair. The
+film-simulation HEIF/JPEG rendered from that DNG. Only the render goes to Photos; the DNG stays in the app for re-rendering. The
 pipeline is Apple Log -> scene-linear -> F-Gamut/F-Log2 -> Fujifilm's official F-Log2 `.cube` LUT.
 Full spec: [`AGENTS.md`](AGENTS.md). Decisions and device results: [`docs/DEVELOPMENT_LOG.md`](docs/DEVELOPMENT_LOG.md).
 

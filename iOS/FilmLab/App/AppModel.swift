@@ -14,6 +14,15 @@ final class AppModel: ObservableObject {
         didSet { UserDefaults.standard.set(selectedSimulationID, forKey: "selectedSimulationID"); updatePreview() }
     }
     @Published var ev: Double = 0 { didSet { updatePreview() } }
+    @Published var flashMode: AVCaptureDevice.FlashMode {
+        didSet { UserDefaults.standard.set(flashMode.rawValue, forKey: "flashMode") }
+    }
+    /// Digital zoom on top of the selected lens: a center crop of the preview and the rendered photo.
+    @Published var zoom: Double = 1 { didSet { updatePreview() } }
+    static let maxZoom = 4.0
+    /// Brings saved photos close to the viewfinder's brightness, measured on device (see DEVELOPMENT_LOG.md).
+    /// Adjustable on the debug screen.
+    static let defaultStillAnchorEV = 2.0
     @Published var previewAnchorEV: Double {
         didSet { UserDefaults.standard.set(previewAnchorEV, forKey: "previewAnchorEV"); updatePreview() }
     }
@@ -40,8 +49,9 @@ final class AppModel: ObservableObject {
     init() {
         let d = UserDefaults.standard
         selectedSimulationID = d.string(forKey: "selectedSimulationID") ?? Simulation.neutralID
+        flashMode = d.object(forKey: "flashMode") == nil ? .auto : AVCaptureDevice.FlashMode(rawValue: d.integer(forKey: "flashMode")) ?? .auto
         previewAnchorEV = d.double(forKey: "previewAnchorEV")
-        stillAnchorEV = d.double(forKey: "stillAnchorEV")
+        stillAnchorEV = d.object(forKey: "stillAnchorEV") == nil ? Self.defaultStillAnchorEV : d.double(forKey: "stillAnchorEV")
         exportFormat = ExportFormat(rawValue: d.string(forKey: "exportFormat") ?? "") ?? .heif
         if let ctx = MetalContext.shared {
             renderer = PreviewRenderer(context: ctx)
@@ -87,8 +97,21 @@ final class AppModel: ObservableObject {
 
     func stopCamera() { camera.stop() }
 
+    /// Empty when the current lens has no flash. Refreshed with the camera status.
+    var supportedFlashModes: [AVCaptureDevice.FlashMode] { cameraStatus.rawAvailable ? camera.supportedFlashModes : [] }
+
+    /// Auto -> on -> off -> auto.
+    func cycleFlash() {
+        switch flashMode {
+        case .auto: flashMode = .on
+        case .on: flashMode = .off
+        default: flashMode = .auto
+        }
+    }
+
     func selectLens(_ lens: LensInfo) async {
         UserDefaults.standard.set(lens.id, forKey: "lensID")
+        zoom = 1
         await configure(lensID: lens.id)
         markLens(cameraStatus)
         updatePreview()
@@ -113,7 +136,7 @@ final class AppModel: ObservableObject {
 
     func updatePreview() {
         let lut = try? library.lutTexture(for: selectedSimulation)
-        renderer?.update(lut: lut, exposureStops: ev + previewAnchorEV, inputMode: cameraStatus.previewMode)
+        renderer?.update(lut: lut, exposureStops: ev + previewAnchorEV, inputMode: cameraStatus.previewMode, zoom: zoom)
     }
 
     /// `viewPoint` normalized to the viewfinder (0..1). Converts through the aspect-fill crop and the
@@ -123,8 +146,9 @@ final class AppModel: ObservableObject {
         // Buffers are rotated to portrait, so width/height swap relative to the format dimensions.
         let src = CGSize(width: CGFloat(dims.height), height: CGFloat(dims.width))
         let t = PreviewRenderer.aspectFill(src: src, dst: viewSize)
-        let u = p.x * CGFloat(t.x) + CGFloat(t.z)
-        let v = p.y * CGFloat(t.y) + CGFloat(t.w)
+        let z = PreviewRenderer.centerZoom(t, by: Float(zoom))
+        let u = p.x * CGFloat(z.x) + CGFloat(z.z)
+        let v = p.y * CGFloat(z.y) + CGFloat(z.w)
         camera.focusAndExpose(at: CGPoint(x: v, y: 1 - u))
     }
 
@@ -135,14 +159,15 @@ final class AppModel: ObservableObject {
         guard cameraStatus.rawAvailable else { errorMessage = CameraError.rawUnavailable.localizedDescription; return }
         isCapturing = true
         defer { isCapturing = false }
+        let shotZoom = zoom
         UIImpactFeedbackGenerator(style: .medium).impactOccurred()
         do {
-            let result = try await camera.capture()
+            let result = try await camera.capture(flash: flashMode)
             var record = try store.save(result)
             lastCapture = record
-            let (image, data, format) = try await render(dng: result.dngData, record: &record, simulation: selectedSimulation, ev: ev)
+            let (image, data, format) = try await render(dng: result.dngData, record: &record, simulation: selectedSimulation, ev: ev, zoom: shotZoom)
             lastImage = image
-            try await PhotoLibrarySaver.savePair(rendered: data, format: format, dng: result.dngData, baseName: record.baseName)
+            try await PhotoLibrarySaver.save(rendered: data, format: format, baseName: record.baseName)
             lastCapture = record
         } catch {
             Log.error("Capture/save failed: \(error.localizedDescription)")
@@ -151,18 +176,19 @@ final class AppModel: ObservableObject {
     }
 
     /// Renders a DNG with a simulation and stores the result in the capture folder.
-    func render(dng: Data, record: inout CaptureRecord, simulation: Simulation, ev: Double) async throws -> (UIImage, Data, ExportFormat) {
+    func render(dng: Data, record: inout CaptureRecord, simulation: Simulation, ev: Double, zoom: Double) async throws -> (UIImage, Data, ExportFormat) {
         guard let developer else { throw FilmEngineError.noMetalDevice }
         let lut = try library.lutTexture(for: simulation)
         let out = try await developer.render(dng: dng, lut: lut, exposureStops: ev + stillAnchorEV)
         let meta = RenderMetadata(simulationName: simulation.displayName, lutFileName: simulation.lutFileName,
-                                  exposureEV: ev, anchorEV: stillAnchorEV, appVersion: RenderMetadata.currentAppVersion)
-        let (data, format) = try ImageExporter.encode(out.image, format: exportFormat, dng: dng, metadata: meta)
+                                  exposureEV: ev, anchorEV: stillAnchorEV, appVersion: RenderMetadata.currentAppVersion, zoom: zoom)
+        let image = ImageExporter.centerCrop(out.image, zoom: zoom)
+        let (data, format) = try ImageExporter.encode(image, format: exportFormat, dng: dng, metadata: meta)
         record.baselineExposure = out.baselineExposure
         record.lastRender = meta
         try store.saveRendered(data, format: format, record: &record)
         lastStillMeter = out.linearCenter
-        return (UIImage(cgImage: out.image), data, format)
+        return (UIImage(cgImage: image), data, format)
     }
 
     @Published private(set) var lastStillMeter: SIMD3<Float>?
@@ -170,7 +196,7 @@ final class AppModel: ObservableObject {
     func rerender(_ record: CaptureRecord, simulation: Simulation, ev: Double) async throws -> (UIImage, Data, ExportFormat) {
         var rec = record
         let dng = try store.loadDNG(record.id)
-        let result = try await render(dng: dng, record: &rec, simulation: simulation, ev: ev)
+        let result = try await render(dng: dng, record: &rec, simulation: simulation, ev: ev, zoom: record.lastRender?.zoom ?? 1)
         lastCapture = rec
         lastImage = result.0
         return result
@@ -178,8 +204,7 @@ final class AppModel: ObservableObject {
 
     func saveToPhotos(_ record: CaptureRecord, rendered: Data, format: ExportFormat) async {
         do {
-            try await PhotoLibrarySaver.savePair(rendered: rendered, format: format, dng: try store.loadDNG(record.id),
-                                                 baseName: record.baseName)
+            try await PhotoLibrarySaver.save(rendered: rendered, format: format, baseName: record.baseName)
         } catch {
             errorMessage = error.localizedDescription
         }

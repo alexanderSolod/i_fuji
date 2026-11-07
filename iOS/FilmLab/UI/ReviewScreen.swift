@@ -33,7 +33,7 @@ struct ReviewScreen: View {
                 HStack {
                     Button("Re-render") { Task { await rerender() } }.disabled(busy)
                     Spacer()
-                    Button(saved ? "Saved" : "Save new pair to Photos") { Task { await save() } }
+                    Button(saved ? "Saved" : "Save to Photos") { Task { await save() } }
                         .disabled(busy || rendered == nil || saved)
                 }
                 .padding(.horizontal)

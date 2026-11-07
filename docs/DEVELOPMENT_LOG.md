@@ -86,7 +86,7 @@ Each item: run on an iPhone 17 Pro, read the in-app log (Debug -> Share log), re
 6. **Orientation.** The photo connection uses `videoRotationAngle = 90`; confirm the rendered HEIF is
    upright and matches the DNG's orientation in Lightroom.
 7. **Anchor agreement (4.1).** After tuning, preview and still within 1/3 stop on a gray card.
-8. **Photos pairing.** In Photos, the asset should show a RAW badge and "RAW + HEIF".
+8. **Photos pairing.** Answered: see "Photos showed the RAW" below. The pair is no longer used.
 9. **Golden image (M4).** Render the same DNG with `research/reference/render_dng.py --lut ...` and
    compare with the app's `rendered.heic` (copy from the app container or Photos). Tolerance TBD;
    rawpy's AHD demosaic and Apple's demosaic will differ in detail, so compare a blurred/downsampled
@@ -116,3 +116,47 @@ Item 1 under "Open questions" (Apple Log + Bayer RAW together) still needs readi
 `addResource(with:data:options:)` for the HEIC + DNG pair failed with `changeNotSupported` (3300). An
 on-device test of the same request using `addResource(with:fileURL:options:)` succeeded, so
 `savePair` now writes temporary copies and passes file URLs.
+
+### Photos showed the RAW instead of the render (iPhone 17 Pro, iOS 27, 2026-11-06)
+With a `.photo` HEIC + `.alternatePhoto` DNG pair, the owner saw the unfiltered RAW in Photos, even though
+`rendered.heic` in the app's capture folder had the simulation applied. **Decision, differing from spec 4.8:**
+save the HEIC and the DNG as two separate assets in one change block, so the filtered photo is what appears
+(later replaced: see "Photos gets the render only" below). The cost is two items per shot in the library. DNG bytes are still unmodified. Pairing could come back if a way
+is found to make Photos display the HEIC half; that was not investigated.
+
+### Viewfinder vs saved photo (iPhone 17 Pro, iOS 27, 2026-11-06)
+Measured with paired viewfinder frames and stills, phone propped still.
+- **Spec 3.1 answered: no.** Apple Log formats (native `x422`, plus ProRes RAW `btp2`) offer no Bayer RAW with the
+  session running, so the preview uses the fallback ("Preview approx."). The negative result is remembered per
+  lens and iOS version, because testing takes about 2.3 s. Switching to Apple Log only for preview and
+  reconfiguring at the shutter was not tried; it would add shutter lag.
+- **Framing:** the old full-screen aspect fill showed 61% of the saved width. The viewfinder is now 3:4. Edge
+  correlation with the still is 0.82 at full frame and 0.21 with a 5% crop.
+- **Tone:** the preview decodes Apple's already tone-mapped video, so it has lifted shadows compared with the DNG.
+  Turning video HDR off on the active lens barely changed it.
+- **Decision:** `stillAnchorEV` defaults to +1.5. In Classic Chrome on one window-lit interior, the 5/25/50/75/95
+  luma percentiles went from 0.02/0.08/0.31/0.56/0.88 to 0.08/0.25/0.61/0.80/0.94 against the viewfinder's
+  0.10/0.25/0.58/0.73/0.84, and mean abs error from 0.166 to 0.055. This is a match to the viewfinder from a small
+  number of scenes, not the gray-card tuning in spec 4.1. A tighter framing of the same room still fell short at
+  +1.5 (median 0.43 vs 0.53). Stills now sit further from `render_dng.py`.
+- **Raised to +2.0 (2026-11-06):** the owner still found +1.5 too dark. Three later shots at +1.5 had median luma
+  about 0.39, 25th percentile about 0.11 and no clipped pixels. +2.0 is a judgment call and hasn't been measured.
+- `baselineExposure` in the DNG is applied by `CIRAWFilter` (setting it to 0 halves the output at 1.01) and varied
+  from 0.0 to 2.0 across scenes. Whether it drives shot-to-shot mismatch is not settled.
+- **Digital zoom:** a center crop of the preview and the rendered photo, up to 4x. The DNG stays full frame.
+
+### Open: stills are brighter than the Python reference (2026-11-06)
+On three owner shots, `rendered.heic` is clearly brighter than `render_dng.py` with lifted shadows (mean abs
+error 0.11-0.17, far from any useful tolerance). `render_dng.py` does not apply everything Apple's RAW decoder
+does, so which is right is unresolved. Also unchecked: whether stills match the live preview (spec 4.1).
+
+### Photos gets the render only (owner decision, 2026-11-06)
+Only the HEIC/JPEG goes to Photos. This differs from spec 4.8. The DNG stays unmodified in the app's capture folder
+for Review re-renders, about 10 MB per shot, and nothing prunes it yet.
+
+### Flash (iPhone 17 Pro, iOS 27, 2026-11-06)
+Top-bar control cycling auto, on and off, defaulting to auto and remembered. The button hides if the lens has no
+flash. Tested on device with Bayer RAW: `on` fired, `off` did not, and `auto` did not fire in a bright scene. `auto`
+firing in the dark is untested. The flash DNG had `baselineExposure` 0 (0.77 without flash). At the +2.0 anchor it
+did not blow out in a bright backlit scene (8.8% of pixels clipped, against 12.7% without flash). A close subject
+in a dark room is untested and may need a lower anchor for flash shots.

@@ -25,7 +25,7 @@
 	<key>NSCameraUsageDescription</key>
 	<string>FilmLab uses the camera to shoot RAW photos with film simulations.</string>
 	<key>NSPhotoLibraryAddUsageDescription</key>
-	<string>FilmLab saves your RAW photo and its film-simulation render to Photos.</string>
+	<string>FilmLab saves your film-simulation photos to Photos.</string>
 	<key>UIApplicationSceneManifest</key>
 	<dict>
 		<key>UIApplicationSupportsMultipleScenes</key>
